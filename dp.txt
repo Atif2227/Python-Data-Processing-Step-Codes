@@ -120,6 +120,12 @@ import os
 import warnings
 warnings.filterwarnings('ignore')
 
+-------------------------------------
+SQL WINDOWS FUNCTION
+SELECT Name, Age, Department, Salary, 
+ AVERAGE(Salary) OVER( PARTITION BY Department ORDER BY Age) AS Avg_Salary
+ FROM employee
+
 
 
 
