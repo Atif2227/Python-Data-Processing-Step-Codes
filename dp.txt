@@ -1,0 +1,140 @@
+# Importing the data
+1. df = pd.read_csv('file.csv')
+
+2. url = 'abc.com'
+   df  = pd.read_csv(url)
+----------------------------
+
+# Data Cleaning
+Check and remove null values
+
+General info for all the columns
+1. df.info()
+
+Gives the sum of null values in all the columns
+2. df.isna().sum()
+
+Gives the True & False values for any null values within all the columns.
+3. df.isna().all()
+
+Drop the all columns with any null values.
+4. df.dropna(axis=1, how='all', inplace=True)
+
+---------------------------------------------
+
+# Treating zeros(0) and empty strings within a column
+Step 1. nan_values = float("Nan")
+Step 2. df.replace(0,nan_values,inplace=True) 
+        df.replace("",nan_values,inplace=True)
+Step 3. df.dropna(axis=1, how='all', inplace=True)
+
+------------------------------------------------
+
+# Remove Rows With Empty Columns
+df.drpna(inplace=True)
+
+------------------------------------------------
+Treating Duplicated
+# count duplicate rows
+1. df.duplicated().sum()
+
+# Dropping duplicated
+1. df.drop_duplicates
+
+-----------------------------------------------
+Filling Missing Values
+# Filling with zero(0)
+df.fillna(0)
+
+# Filling in specific column
+df['col'].fillna(0)
+
+# Fill different columns with different values
+Step 1. values = {"A":'value1',"B":'value2',"C":'value3'}
+Step 2. df.fillna(value=values)
+
+---------------------------------------------------
+
+Removing/Replacing Special characters from column values
+df.replace('$','INR',regex=True).astype(object)
+
+---------------------------------------------------
+
+Download File As .csv file
+df.to_csv(r'path\filename.csv',index=False)
+
+---------------------------------------------------
+Removing One or Multiple Columns
+# Dropping one column
+df.drop(['Col1'],axis=1)
+
+# Dropping more than one column
+df.drop(['col1','col2'],axis=1)
+---------------------------------------------------
+
+Selecting df on condition on one column
+df = df[df['col1']>3.5]
+df_col1 = df[[col1]]
+df_col1
+
+--------------------------------------------------
+Group a df and and sort on another column
+new_df = df.sort_values(['col1'],ascending=False).groupby('col2')
+new_df.haed()
+
+--------------------------------------------------
+
+Top 20 columns with highest value of other column
+df.groupby('col1').sum('col2')['col2'].nlargest(20)
+
+--------------------------------------------------
+
+Removing specific cahracters from a column values
+# Splitting at ','.
+df['col1'] = df['col1'].apply(lambda x: x.split(,)[0])
+
+-------------------------------------------------
+
+Merging DFs
+merged_df = df1.merge(df2,on='df2col1',how='inner')
+merged_df
+
+------------------------------------------------
+Matplot lib
+plt.pie(x,y)
+plt.title('title')
+plt.show()
+
+Plotly Exprex
+fig = px.pie(df,values = '',names='', title='')
+fig.show()
+
+------------------------------------------------
+
+import seaborn as sns
+import pandas as pd
+import numpy as np
+import matplotlib
+import os
+%matplotlib inline
+import warnings
+warnings.filterwarnings('ignore')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
