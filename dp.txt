@@ -121,11 +121,54 @@ import warnings
 warnings.filterwarnings('ignore')
 
 -------------------------------------
-SQL WINDOWS FUNCTION
+SQL CTE & WINDOWS FUNCTION
 SELECT Name, Age, Department, Salary, 
  AVERAGE(Salary) OVER( PARTITION BY Department ORDER BY Age) AS Avg_Salary
  FROM employee
 
+/* CTE - features overviews w.r.t. cmd status */
+with overview (user_ID, country, currency, trade_size, contract_size, 
+               buy_sell) as (
+select 
+    users.login_hash,
+    users.country_hash,
+    users.currency,
+    sum(trades.volume) ,
+    sum(trades.contractsize),
+    trades.cmd
+from trades
+join users
+on trades.login_hash = users.login_hash
+group by users.country_hash,users.currency,users.login_hash,trades.cmd
+order by sum(trades.volume) 
+desc limit 10)
+                    
+select 
+    user_ID,
+    country,
+    currency,
+    trade_size,
+    contract_size,
+    buy_sell
+from 
+    overview
+where
+    buy_sell = 1;
+    
+/* Rank and put countries in row numbers according to net trade size */
+select 
+rank() over(partition by users.country_hash order by sum(volume) desc) 
+as user_rank, country_hash, trades.login_hash,sum(volume) as net_trade_size, 
+sum(contractsize) as contract_sum,
+row_number() over(partition by users.country_hash order by sum(volume) desc) 
+as user_row
+from trades
+join users
+on trades.login_hash = users.login_hash
+group by users.country_hash,trades.login_hash
+order by sum(trades.volume) 
+desc limit 10;
+Footer
 
 
 
