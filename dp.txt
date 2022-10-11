@@ -239,7 +239,16 @@ CALCULATE(
 CI Customer Onlie % = 
 [CI Customer Online]/[CI Retail Retail Customer All]*100
 -------------------------------------------------------------------
+-- For New Table 
+Branch = 
+IF('10-Currency'[Currency IND]="ADE","ABDBAA",
+IF('10-Currency'[Currency IND]="CAF","EBABF",
+IF('10-Currency'[Currency IND]="EBF","GCABF",
+IF('10-Currency'[Currency IND]="CAF" && '10-Currency'[Currency IND]="EBF","GABFABA",
+IF('10-Currency'[Currency IND]="BFE","BCBEABCA", 
+IF('10-Currency'[Currency IND]="CAE","CBAFBAB",""
 
+))))))
 
 
 
