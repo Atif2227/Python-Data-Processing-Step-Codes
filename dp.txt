@@ -170,6 +170,83 @@ order by sum(trades.volume)
 desc limit 10;
 Footer
 
+----------------------------------------------------------------------------------------------
+Revenue = '1- Invoices report'[UNIT SELL]*'1- Invoices report'[Qty]
+-----------------------------------------------------------------------------------------------
+Revenue Dollar = 
+IF(
+    '1- Invoices report'[Currency IND]="EBF",('1- Invoices report'[Revenue]/0.505),
+    IF('1- Invoices report'[Currency IND]="BFE",('1- Invoices report'[Revenue]/2.8832),
+    IF('1- Invoices report'[Currency IND]="CAF",('1- Invoices report'[Revenue]/2.66),
+    IF('1- Invoices report'[Currency IND]="BGE",('1- Invoices report'[Revenue]/0.5851),
+    IF('1- Invoices report'[Currency IND]="CAE",('1- Invoices report'[Revenue]/0.4775),
+    ('1- Invoices report'[Revenue]/1.5)
+)))))
+------------------------------------------------------------------------------------------------
+Industry Type = 
+IF('4- Segment code Master Reference'[Vertical] = "Construction IndustResources IndustResources Industrieseses","CI",
+IF('4- Segment code Master Reference'[Vertical] = "Construction IndustResources Industrieses","CI",
+IF('4- Segment code Master Reference'[Vertical] = "Energy & Transportation","E&T","RI"
+)))
+----------------------------------------------------------------------------------------------------
+Size Segment = 
+
+VAR ThisCustomerNumber = [Customer Number]
+VAR DistinctProductFamilyCount =
+    CALCULATE(
+        DISTINCTCOUNT( '9-Asset population v2'[Product Family] ),
+        FILTER( '9-Asset population v2', '9-Asset population v2'[Customer Number] = ThisCustomerNumber )
+    )
+
+RETURN
+    IF(
+        '9-Asset population v2'[Product Family] = "",
+        "No Asset",
+        IF(
+            DistinctProductFamilyCount <= 3 && DistinctProductFamilyCount>0,
+            "Retail",
+            IF(
+                DistinctProductFamilyCount <= 19,
+                "Small",
+                IF( DistinctProductFamilyCount <= 100, "Medium", "Large" )
+        )
+    ))
+-----------------------------------------------------------------------------------------------------------------
+CI Retail Retail Customer All = 
+CALCULATE(
+        DISTINCTCOUNT( '4- Segment code Master Reference'[CIC code]),
+        FILTER('4- Segment code Master Reference','4- Segment code Master Reference'[Industry Type]="CI"),
+        FILTER('9-Asset population v2','9-Asset population v2'[Size Segment]="Retail"),
+        FILTER('6- Heavy Machine or Engine reference','6- Heavy Machine or Engine reference'[Heavy Machines or Engines]="Heavy Machines")
+        )
+-----------------------------------------------------------
+CI Customers Count = 
+CALCULATE(
+        DISTINCTCOUNT( '4- Segment code Master Reference'[CIC code]),
+        FILTER('6- Heavy Machine or Engine reference','6- Heavy Machine or Engine reference'[Heavy Machines or Engines]="Heavy Machines"),
+        FILTER('4- Segment code Master Reference','4- Segment code Master Reference'[Vertical]="Construction IndustResources Industrieses"
+    ))
+ ----------------------------------------------------
+CI Customer Online = 
+CALCULATE(
+        DISTINCTCOUNT( '4- Segment code Master Reference'[CIC code]),
+        FILTER('9-Asset population v2','9-Asset population v2'[Size Segment]="Retail"),
+        FILTER('6- Heavy Machine or Engine reference','6- Heavy Machine or Engine reference'[Heavy Machines or Engines]="Heavy Machines"),
+        FILTER('1- Invoices report','1- Invoices report'[Internet Order]="Y"),
+        FILTER('4- Segment code Master Reference','4- Segment code Master Reference'[Industry Type]="CI"
+    ))
+-----------------------------------------------
+CI Customer Onlie % = 
+[CI Customer Online]/[CI Retail Retail Customer All]*100
+-------------------------------------------------------------------
+
+
+
+
+
+
+
+
 
 
 
